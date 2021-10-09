@@ -1,19 +1,19 @@
-import { AppError } from "../../../../shared/errors/AppError";
-import { InMemoryUsersRepository } from "../../repositories/in-memory/InMemoryUsersRepository"
-import { CreateUserUseCase } from "../createUser/CreateUserUseCase";
-import { AuthenticateUserUseCase } from "./AuthenticateUserUseCase";
+import { AppError } from "../../../shared/errors/AppError";
+import { InMemoryUsersRepository } from "../../users/repositories/in-memory/InMemoryUsersRepository";
+import { AuthenticateUserUseCase } from "../../users/useCases/authenticateUser/AuthenticateUserUseCase";
+import { CreateUserUseCase } from "../../users/useCases/createUser/CreateUserUseCase";
 
 let inMemoryUsersRepository: InMemoryUsersRepository;
 let authenticateUserUseCase: AuthenticateUserUseCase;
 let createUserUseCase: CreateUserUseCase;
-describe('Authenticate User', () => {
-  beforeEach(()=> {
+describe('Users Controllers', () => {
+  beforeEach(async () => {
     inMemoryUsersRepository = new InMemoryUsersRepository()
     authenticateUserUseCase = new AuthenticateUserUseCase(inMemoryUsersRepository)
     createUserUseCase = new CreateUserUseCase(inMemoryUsersRepository);
-  })
+  });
   it('should be able to authenticate a user', async () => {
-    const user = await createUserUseCase.execute({
+    await createUserUseCase.execute({
       email: 'email@email.com',
       name: 'name',
       password: 'password'
@@ -23,8 +23,8 @@ describe('Authenticate User', () => {
       password: 'password'
     });
     expect(authenticatedUser).toHaveProperty('token');
-  })
-  it('should not be able to authenticate a user if password is wrong or missing', () => {
+  });
+  it('should not be able to authenticate an user if password is wrong or missing', () => {
     expect(async () => {
       await createUserUseCase.execute({
         email: 'email@email.com',
@@ -36,8 +36,8 @@ describe('Authenticate User', () => {
         password: 'wrongPassword'
       });
     }).rejects.toBeInstanceOf(AppError)
-  })
-  it('should not be able to authenticate a user if email is wrong or missing', () => {
+  });
+  it('should not be able to authenticate an user if email is wrong or missing', () => {
     expect(async () => {
       await createUserUseCase.execute({
         email: 'email@email.com',
@@ -49,5 +49,27 @@ describe('Authenticate User', () => {
         password: 'password'
       });
     }).rejects.toBeInstanceOf(AppError)
-  })
-})
+  });
+  it('should be able to create a new user', async () => {
+    const user = await createUserUseCase.execute({
+      name: 'Name',
+      email: 'create@email.com',
+      password: 'password'
+    });
+    expect(user).toHaveProperty('id');
+  });
+  it('should not be able to create a new user with the same email', () => {
+    expect(async () => {
+      await createUserUseCase.execute({
+        name: 'Name',
+        email: 'email@email.com',
+        password: 'password'
+      })
+      await createUserUseCase.execute({
+        name: 'Name 2',
+        email: 'email@email.com',
+        password: 'password'
+      })
+    }).rejects.toBeInstanceOf(AppError)
+  });
+});

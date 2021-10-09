@@ -12,7 +12,7 @@ import { AppError } from './shared/errors/AppError';
 
 const app = express();
 
-dotenv.config()
+dotenv.config();
 app.use(cors());
 app.use(express.json());
 
