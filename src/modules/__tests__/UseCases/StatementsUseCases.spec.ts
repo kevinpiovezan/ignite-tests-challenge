@@ -39,12 +39,14 @@ describe('Statements Use Cases', () => {
       enum OperationType {
         DEPOSIT = 'deposit',
         WITHDRAW = 'withdraw',
+        TRANSFER = 'transfer'
       }
       await createStatementUseCase.execute({
         user_id: 'noUserId',
         amount: 100,
         description: 'Test Deposit',
-        type: OperationType.DEPOSIT
+        type: OperationType.DEPOSIT,
+        sender_id: null
       })
     }).rejects.toBeInstanceOf(AppError);
   });
@@ -54,13 +56,15 @@ describe('Statements Use Cases', () => {
     enum OperationType {
       DEPOSIT = 'deposit',
       WITHDRAW = 'withdraw',
+      TRANSFER = 'transfer'
     }
 
     const statement = await createStatementUseCase.execute({
       user_id,
       amount: 100,
       description: 'Test Deposit',
-      type: OperationType.DEPOSIT
+      type: OperationType.DEPOSIT,
+      sender_id: null
     })
     expect(statement.amount).toBe(100);
   });
@@ -70,19 +74,22 @@ describe('Statements Use Cases', () => {
     enum OperationType {
       DEPOSIT = 'deposit',
       WITHDRAW = 'withdraw',
+      TRANSFER = 'transfer'
     }
 
     await createStatementUseCase.execute({
       user_id,
       amount: 100,
       description: 'Test',
-      type: OperationType.DEPOSIT
+      type: OperationType.DEPOSIT,
+      sender_id: null
     })
     const statement = await createStatementUseCase.execute({
       user_id,
       amount: 50,
       description: 'Test Withdraw',
-      type: OperationType.WITHDRAW
+      type: OperationType.WITHDRAW,
+      sender_id: null
     })
     expect(statement.amount).toBe(50);
   });
@@ -93,19 +100,22 @@ describe('Statements Use Cases', () => {
       enum OperationType {
         DEPOSIT = 'deposit',
         WITHDRAW = 'withdraw',
-      };
+        TRANSFER = 'transfer'
+      }
 
       await createStatementUseCase.execute({
         user_id,
         amount: 50,
         description: 'Test',
-        type: OperationType.DEPOSIT
+        type: OperationType.DEPOSIT,
+        sender_id: null
       });
       await createStatementUseCase.execute({
         user_id,
         amount: 100,
         description: 'Test',
-        type: OperationType.WITHDRAW
+        type: OperationType.WITHDRAW,
+        sender_id: null
       });
     }).rejects.toBeInstanceOf(AppError);
   });
@@ -116,13 +126,15 @@ describe('Statements Use Cases', () => {
       enum OperationType {
         DEPOSIT = 'deposit',
         WITHDRAW = 'withdraw',
+        TRANSFER = 'transfer'
       }
 
       await createStatementUseCase.execute({
         user_id,
         amount: 100,
         description: 'Test Deposit',
-        type: OperationType.DEPOSIT
+        type: OperationType.DEPOSIT,
+        sender_id: null
       })
       await getBalanceUseCase.execute({
         user_id: 'invalidUserId'
@@ -135,13 +147,15 @@ describe('Statements Use Cases', () => {
     enum OperationType {
       DEPOSIT = 'deposit',
       WITHDRAW = 'withdraw',
+      TRANSFER = 'transfer'
     }
 
     await createStatementUseCase.execute({
       user_id,
       amount: 100,
       description: 'Test Deposit',
-      type: OperationType.DEPOSIT
+      type: OperationType.DEPOSIT,
+      sender_id: null
     })
     const balance = await getBalanceUseCase.execute({
       user_id
@@ -156,13 +170,15 @@ describe('Statements Use Cases', () => {
       enum OperationType {
         DEPOSIT = 'deposit',
         WITHDRAW = 'withdraw',
+        TRANSFER = 'transfer'
       }
 
       const statement = await createStatementUseCase.execute({
         user_id,
         amount: 100,
         description: 'Test Deposit',
-        type: OperationType.DEPOSIT
+        type: OperationType.DEPOSIT,
+        sender_id: null
       })
       const statement_id = statement.id as string;
       await getStatementOperationUseCase.execute({
@@ -178,13 +194,15 @@ describe('Statements Use Cases', () => {
       enum OperationType {
         DEPOSIT = 'deposit',
         WITHDRAW = 'withdraw',
-      };
+        TRANSFER = 'transfer'
+      }
 
       await createStatementUseCase.execute({
         user_id,
         amount: 100,
         description: 'Test Deposit',
-        type: OperationType.DEPOSIT
+        type: OperationType.DEPOSIT,
+        sender_id: null
       });
       await getStatementOperationUseCase.execute({
         user_id,
@@ -198,13 +216,15 @@ describe('Statements Use Cases', () => {
     enum OperationType {
       DEPOSIT = 'deposit',
       WITHDRAW = 'withdraw',
+      TRANSFER = 'trasnfer'
     };
 
     const statement = await createStatementUseCase.execute({
       user_id,
       amount: 100,
       description: 'Test Deposit',
-      type: OperationType.DEPOSIT
+      type: OperationType.DEPOSIT,
+      sender_id: null
     });
 
     const statement_id = statement.id as string;
